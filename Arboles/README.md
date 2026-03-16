@@ -169,7 +169,7 @@ generación de estudiantes
 
 estructuras de búsqueda
 
-medición de tiempos de ejecución
+medición de tiempos de búsqueda 
 
 👨‍💻 Autor: Santiago Rendón Rivera
 
