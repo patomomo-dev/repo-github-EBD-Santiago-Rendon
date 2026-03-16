@@ -2,36 +2,28 @@
 # IMPORTACIÓN DE LIBRERÍAS
 # =========================================================
 
-"""
-Las librerías son herramientas que ya vienen programadas en Python
-y que nos ayudan a realizar ciertas tareas sin tener que programarlas
-desde cero.
-"""
-
-# random: se utiliza para generar valores aleatorios
-# (por ejemplo nombres o números de identificación)
+# random: permite generar números aleatorios.
+# Se usa para crear estudiantes ficticios con nombres y promedios al azar.
 import random
 
-# bisect_left: permite realizar búsquedas binarias en listas ordenadas.
-# La búsqueda binaria es un método muy rápido para encontrar datos.
-from bisect import bisect_left
+# time: permite medir cuánto tiempo tarda el programa en ejecutar ciertas operaciones.
+# En este caso se usa para medir el tiempo de las búsquedas.
+import time
 
-# math: contiene funciones matemáticas útiles como log2
-import math
+# bisect_left: función que permite realizar búsqueda binaria en listas ordenadas.
+# Se usa para simular el funcionamiento de un índice tipo B+ Tree.
+from bisect import bisect_left
 
 
 # =========================================================
 # CONFIGURACIÓN INICIAL
 # =========================================================
 
-"""
-Aquí se definen algunas variables iniciales del programa.
-"""
-
-# Número total de estudiantes que se van a generar para el experimento
+# Número total de estudiantes que se van a generar para las pruebas
 N = 10000
 
-# Lista de nombres posibles que se asignarán aleatoriamente a los estudiantes
+# Lista de nombres posibles para los estudiantes
+# Cuando se genere un estudiante, su nombre se escogerá aleatoriamente de esta lista
 nombres = ["Ana", "Carlos", "Maria", "Luis", "Pedro", "Sofia", "Laura", "Juan"]
 
 
@@ -40,37 +32,30 @@ nombres = ["Ana", "Carlos", "Maria", "Luis", "Pedro", "Sofia", "Laura", "Juan"]
 # =========================================================
 
 """
-En esta sección se crean estudiantes ficticios.
+En esta sección se generan estudiantes ficticios para poder
+probar los distintos métodos de búsqueda.
 
-Cada estudiante es representado como un pequeño registro
-que contiene:
-
-- id: número único que identifica al estudiante
-- nombre: nombre elegido al azar
+Cada estudiante tiene tres datos:
+- id: número que identifica al estudiante
+- nombre: nombre elegido aleatoriamente
 - promedio: nota promedio entre 3.0 y 5.0
 """
 
 
 def generar_estudiantes_ordenados(n):
-
     """
-    Esta función genera estudiantes cuyos IDs están en orden.
-
-    Ejemplo:
-    0, 1, 2, 3, 4, 5, ...
-
-    Parámetro:
-    n → cantidad de estudiantes que se quieren generar.
-
-    Retorna:
-    Una lista con n estudiantes.
+    Genera una lista de estudiantes donde los IDs están en orden.
+    Es decir: 0, 1, 2, 3, 4, 5...
+    
+    Esto es importante porque cuando los datos están ordenados,
+    algunas estructuras de datos se comportan peor.
     """
 
     estudiantes = [
         {
-            "id": i,  # ID consecutivo
-            "nombre": random.choice(nombres),  # nombre aleatorio
-            "promedio": round(random.uniform(3.0, 5.0), 2)  # promedio aleatorio
+            "id": i,  # el ID aumenta de forma ordenada
+            "nombre": random.choice(nombres),
+            "promedio": round(random.uniform(3.0, 5.0), 2)
         }
         for i in range(n)
     ]
@@ -79,17 +64,15 @@ def generar_estudiantes_ordenados(n):
 
 
 def generar_estudiantes_aleatorios(n):
-
     """
-    Esta función genera estudiantes con IDs completamente aleatorios.
-
-    Esto simula una base de datos más realista donde
-    los identificadores no están necesariamente ordenados.
+    Genera estudiantes con IDs completamente aleatorios.
+    
+    Esto simula un caso más realista, donde los datos no llegan ordenados.
     """
 
     estudiantes = [
         {
-            "id": random.randint(1000, 99999),  # ID aleatorio
+            "id": random.randint(1000, 99999),
             "nombre": random.choice(nombres),
             "promedio": round(random.uniform(3.0, 5.0), 2)
         }
@@ -104,26 +87,22 @@ def generar_estudiantes_aleatorios(n):
 # =========================================================
 
 """
-Este es el método de búsqueda más sencillo.
+Este es el método de búsqueda más simple.
 
-El programa revisa cada estudiante uno por uno
-hasta encontrar el que tiene el ID buscado.
+El programa revisa cada estudiante de la lista uno por uno
+hasta encontrar el ID buscado.
 
-Si el estudiante está al final de la lista,
-el programa tendrá que revisar todos los anteriores primero.
-
-Por eso este método puede ser lento cuando
-hay muchos datos.
+Este método puede ser lento si hay muchos datos.
 """
 
 
 def buscar_lista(lista, id_buscar):
 
-    for e in lista:
-        if e["id"] == id_buscar:
+    for e in lista:  # se revisa cada estudiante
+        if e["id"] == id_buscar:  # si el ID coincide
             return e
 
-    return None
+    return None  # si no se encuentra el estudiante
 
 
 # =========================================================
@@ -131,26 +110,20 @@ def buscar_lista(lista, id_buscar):
 # =========================================================
 
 """
-Un Árbol Binario de Búsqueda (ABB) es una estructura de datos
-que organiza la información de forma jerárquica.
+Un árbol binario de búsqueda organiza los datos en forma de árbol.
 
-Cada nodo del árbol tiene:
+Regla principal:
+- valores menores van a la izquierda
+- valores mayores van a la derecha
 
-- un valor
-- un hijo izquierdo (valores menores)
-- un hijo derecho (valores mayores)
-
-Esto permite encontrar datos más rápido que en una lista normal.
+Esto permite reducir el número de comparaciones necesarias para encontrar un dato.
 """
 
 
 class Nodo:
-
     """
-    Un nodo es una unidad dentro del árbol.
-
-    Cada nodo contiene:
-    - un estudiante
+    Cada nodo del árbol guarda:
+    - el estudiante
     - una referencia al hijo izquierdo
     - una referencia al hijo derecho
     """
@@ -163,28 +136,18 @@ class Nodo:
 
 
 class ABB:
-
     """
-    Esta clase representa el Árbol Binario de Búsqueda.
-
-    Permite:
-    - insertar estudiantes
-    - buscar estudiantes por su ID
+    Esta clase representa el árbol binario completo.
     """
 
     def __init__(self):
 
-        # Nodo principal del árbol
-        self.raiz = None
+        self.raiz = None  # el árbol comienza vacío
 
     def insertar(self, estudiante):
-
         """
-        Inserta un estudiante dentro del árbol.
-
-        La posición depende del ID:
-        - IDs menores van a la izquierda
-        - IDs mayores van a la derecha
+        Inserta un nuevo estudiante en el árbol respetando
+        las reglas del árbol binario de búsqueda.
         """
 
         nuevo = Nodo(estudiante)
@@ -214,9 +177,9 @@ class ABB:
                 nodo = nodo.der
 
     def buscar(self, id_buscar):
-
         """
-        Busca un estudiante dentro del árbol utilizando su ID.
+        Busca un estudiante en el árbol siguiendo la estructura
+        izquierda/derecha hasta encontrarlo.
         """
 
         nodo = self.raiz
@@ -240,35 +203,32 @@ class ABB:
 # =========================================================
 
 """
-Los árboles B+ se utilizan mucho en bases de datos
-porque permiten búsquedas extremadamente rápidas.
+En este programa no se implementa un B+ Tree real.
 
-Para simplificar el ejercicio, aquí se simula un B+ Tree
-utilizando dos cosas:
+En cambio, se simula su comportamiento usando:
 
-1. Una lista ordenada
+1. Una lista ordenada de estudiantes
 2. Búsqueda binaria
+
+Esto se parece a cómo funcionan muchos índices en bases de datos.
 """
 
 
 def construir_bplus(estudiantes):
 
-    """
-    Ordena los estudiantes por su ID.
-    """
-
+    # ordenar estudiantes por ID
     ids = sorted(estudiantes, key=lambda x: x["id"])
 
-    # Lista que contiene solo los IDs
+    # crear lista solo con los IDs
     solo_ids = [e["id"] for e in ids]
 
     return ids, solo_ids
 
 
 def buscar_bplus(id_buscar, ids, solo_ids):
-
     """
-    Busca un estudiante usando búsqueda binaria.
+    Usa búsqueda binaria para encontrar rápidamente
+    la posición del ID dentro de la lista ordenada.
     """
 
     pos = bisect_left(solo_ids, id_buscar)
@@ -280,92 +240,73 @@ def buscar_bplus(id_buscar, ids, solo_ids):
 
 
 # =========================================================
-# VERIFICAR SI LOS IDS ESTÁN ORDENADOS
-# =========================================================
-
-"""
-Esta función revisa si los IDs de los estudiantes
-están ordenados de menor a mayor.
-"""
-
-
-def estan_ordenados(estudiantes):
-
-    for i in range(len(estudiantes) - 1):
-        if estudiantes[i]["id"] > estudiantes[i + 1]["id"]:
-            return False
-
-    return True
-
-
-# =========================================================
 # MEDICIÓN DE TIEMPOS
 # =========================================================
 
 """
-Aquí se calcula cuánto tiempo tardaría cada método
-de búsqueda según su complejidad teórica.
+Esta función mide cuánto tiempo tarda cada método
+en realizar varias búsquedas.
 
-Se comparan tres métodos:
-
-1) Lista simple
-2) Árbol Binario de Búsqueda (ABB)
-3) B+ Tree
+Los tiempos se calculan usando el reloj interno del computador.
 """
 
 
 def medir_busquedas(estudiantes, abb, ids, solo_ids, cantidad):
 
-    n = len(estudiantes)
-
     print(f"\n{cantidad} búsquedas")
     print("--------------------")
 
-    ordenados = estan_ordenados(estudiantes)
+    # generar IDs aleatorios que se van a buscar
+    ids_buscar = [random.choice(estudiantes)["id"] for _ in range(cantidad)]
 
     # =========================
-    # LISTA
+    # MEDIR TIEMPO LISTA
     # =========================
 
-    tiempo_lista = (n * cantidad) / 2.2e8
+    inicio = time.perf_counter()
+
+    for i in ids_buscar:
+        buscar_lista(estudiantes, i)
+
+    tiempo_lista = time.perf_counter() - inicio
 
     # =========================
-    # ABB
+    # MEDIR TIEMPO ABB
     # =========================
 
-    if ordenados:
-        # Si los datos están ordenados el árbol se vuelve muy lento
-        tiempo_abb = (n * cantidad) / 3e8
-    else:
-        # Si los datos están desordenados el árbol es más eficiente
-        tiempo_abb = (math.log2(n) * cantidad) / 6e6
+    inicio = time.perf_counter()
+
+    for i in ids_buscar:
+        abb.buscar(i)
+
+    tiempo_abb = time.perf_counter() - inicio
 
     # =========================
-    # B+ TREE
+    # MEDIR TIEMPO B+
     # =========================
 
-    tiempo_bplus = (math.log2(n) * cantidad) / 6.6e6
+    inicio = time.perf_counter()
 
-    print("Lista:", round(tiempo_lista, 4), "segundos")
-    print("ABB:", round(tiempo_abb, 4), "segundos")
-    print("B+:", round(tiempo_bplus, 4), "segundos")
+    for i in ids_buscar:
+        buscar_bplus(i, ids, solo_ids)
+
+    tiempo_bplus = time.perf_counter() - inicio
+
+    # mostrar resultados
+    print("Lista:", round(tiempo_lista, 6), "segundos")
+    print("ABB:", round(tiempo_abb, 6), "segundos")
+    print("B+:", round(tiempo_bplus, 6), "segundos")
 
 
 # =========================================================
 # EJECUTAR PRUEBAS
 # =========================================================
 
-"""
-Esta función ejecuta todo el experimento.
-
-Pasos:
-1. Construye el árbol ABB
-2. Construye el índice B+
-3. Ejecuta varias pruebas de búsqueda
-"""
-
-
 def ejecutar_prueba(estudiantes, titulo):
+    """
+    Ejecuta todas las pruebas de búsqueda con diferentes
+    cantidades de consultas.
+    """
 
     print("\n===================================")
     print(titulo)
@@ -373,11 +314,14 @@ def ejecutar_prueba(estudiantes, titulo):
 
     abb = ABB()
 
+    # insertar estudiantes en el árbol
     for e in estudiantes:
         abb.insertar(e)
 
+    # construir índice B+
     ids, solo_ids = construir_bplus(estudiantes)
 
+    # realizar pruebas con diferentes cantidades de búsquedas
     medir_busquedas(estudiantes, abb, ids, solo_ids, 100)
     medir_busquedas(estudiantes, abb, ids, solo_ids, 1000)
     medir_busquedas(estudiantes, abb, ids, solo_ids, 2000)
@@ -391,24 +335,21 @@ def ejecutar_prueba(estudiantes, titulo):
 # =========================================================
 
 """
-Aquí comienza la ejecución del programa.
-
-Se generan dos escenarios diferentes:
-
-1) Estudiantes con IDs ordenados
-2) Estudiantes con IDs aleatorios
-
-Luego se comparan los tiempos de búsqueda
-en ambos casos.
+Esta es la parte donde comienza la ejecución del programa.
 """
+
 
 if __name__ == "__main__":
 
     print("Generando estudiantes...\n")
 
+    # generar estudiantes con IDs ordenados
     estudiantes_orden = generar_estudiantes_ordenados(N)
+
+    # generar estudiantes con IDs aleatorios
     estudiantes_random = generar_estudiantes_aleatorios(N)
 
+    # ejecutar pruebas
     ejecutar_prueba(estudiantes_orden, "PRUEBA CON IDS EN ORDEN")
 
     ejecutar_prueba(estudiantes_random, "PRUEBA CON IDS ALEATORIOS")
