@@ -22,7 +22,7 @@ nombre → nombre del estudiante
 
 promedio → promedio académico
 
-Se generan 10,000 estudiantes y luego se realizan múltiples búsquedas para medir el tiempo de ejecución.
+Se generan 10,000 estudiantes y luego se realizan múltiples búsquedas para medir el tiempo de búsqueda.
 
 🧠 Estructuras de datos comparadas
 1️⃣ Lista
