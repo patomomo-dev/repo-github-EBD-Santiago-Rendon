@@ -79,7 +79,7 @@ pip install matplotlib
 
 Simplemente ejecuta el archivo:
 
-python nombre_del_archivo.py
+Lab3.ipynb
 📂 Estructura del Código
 Configuración inicial
 Función de distancia
