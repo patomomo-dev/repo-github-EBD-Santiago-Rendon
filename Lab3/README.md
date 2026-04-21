@@ -60,7 +60,7 @@ Fuerza Bruta
 Quadtree
 🚀 Ejecución
 Clona el repositorio:
-git clone https://github.com/tu-usuario/tu-repo.git
+git clone: https://github.com/patomomo-dev/repo-github-EBD-Santiago-Rendon
 cd tu-repo
 Ejecuta el script:
 python nombre_del_archivo.py
