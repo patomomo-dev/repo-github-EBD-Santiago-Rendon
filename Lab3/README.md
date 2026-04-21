@@ -1,105 +1,104 @@
-🔍 Comparación de Métodos de Búsqueda Espacial
-Fuerza Bruta vs Quadtree
-📌 Descripción
+🌳 Comparación de Búsqueda Espacial: Fuerza Bruta vs Quadtree
 
-Este proyecto implementa y compara dos enfoques para resolver problemas de búsqueda espacial en 2D:
+Este proyecto implementa y compara dos métodos para realizar búsquedas espaciales en 2D:
 
-Fuerza Bruta
-Quadtree
+🔴 Fuerza Bruta
+🌳 Quadtree (estructura jerárquica optimizada)
 
-El objetivo es analizar su rendimiento al encontrar puntos dentro de un radio determinado y evaluar cuál es más eficiente dependiendo del tamaño de los datos.
+El objetivo es analizar rendimiento y eficiencia al buscar puntos dentro de un radio y encontrar el punto más cercano.
 
-🧠 Conceptos Clave
-🔹 Fuerza Bruta
+📌 Descripción del Problema
 
-Consiste en recorrer todos los puntos y calcular su distancia respecto a un punto de consulta.
+Dado un conjunto de puntos en 2D:
 
-✔ Fácil de implementar
-❌ Poco eficiente con grandes volúmenes de datos
-🔹 Quadtree
+Encontrar todos los puntos dentro de un radio específico
+Encontrar el punto más cercano a una consulta
 
-Estructura de datos jerárquica que divide el espacio en cuatro cuadrantes recursivamente.
+Se comparan dos enfoques:
 
-✔ Reduce el número de comparaciones
-✔ Ideal para datos espaciales en 2D
-❌ Tiene overhead inicial
-⚙️ Funcionalidades del Proyecto
-Generación de puntos aleatorios en 2D
-Cálculo de:
-Puntos dentro de un radio
-Punto más cercano
-Visualización gráfica:
-Vista general
-Vista acotada con zoom
-Implementación completa de Quadtree:
-Inserción de puntos
-Búsqueda por rango circular
-Análisis de rendimiento comparativo
-Gráfica final de tiempos de ejecución
-📊 Análisis de Rendimiento
+Método	Descripción
+Fuerza Bruta	Revisa todos los puntos
+Quadtree	Divide el espacio recursivamente para optimizar la búsqueda
+⚙️ Tecnologías utilizadas
+Python 🐍
+Librerías:
+random
+math
+matplotlib
+time
+🧠 ¿Cómo funciona?
+🔴 Fuerza Bruta
+Recorre todos los puntos
+Calcula la distancia uno por uno
+Complejidad: O(n)
+🌳 Quadtree
+Divide el espacio en 4 regiones (cuadrantes)
+Solo explora zonas relevantes
+Usa poda espacial (intersección con círculo)
+Complejidad promedio: O(log n)
+📊 Funcionalidades del código
 
-Se evalúan distintos tamaños de datos:
+✔️ Generación de puntos aleatorios
+✔️ Búsqueda por radio
+✔️ Búsqueda del punto más cercano
+✔️ Comparación de tiempos
+✔️ Visualización gráfica
+✔️ Análisis de rendimiento con distintos tamaños
 
-[5, 50, 100, 300, 600, 1000, 2000, 5000, 10000]
-
-Para cada tamaño se mide:
-
-Tiempo promedio usando Fuerza Bruta
-Tiempo promedio usando Quadtree
-📈 Resultados Esperados
-🔸 Tamaños pequeños
-La fuerza bruta suele ser más rápida
-El Quadtree tiene overhead por subdivisiones
-🔸 Tamaños grandes
-El Quadtree se vuelve más eficiente
-Reduce búsquedas innecesarias en el espacio
-🔸 Punto de cambio
-Generalmente entre 500 y 2000 puntos
-Depende de la distribución de los datos
-📌 Conclusión
-
-El Quadtree es más escalable y eficiente en problemas espaciales en 2D, especialmente cuando se realizan múltiples consultas por región.
-
-La fuerza bruta sigue siendo útil en casos pequeños por su simplicidad.
-
-🖼️ Visualizaciones
-
-El programa genera:
-
-Distribución de puntos
-Puntos dentro del radio
+📈 Visualizaciones
+1. Visualización general
+Puntos dentro y fuera del radio
 Punto de consulta
 Punto más cercano
 Círculo de búsqueda
-🛠️ Requisitos
-Python 3.x
-Librerías:
-pip install matplotlib
-▶️ Ejecución
+2. Visualización acotada (zoom)
+Enfoque en la zona de interés
+Mejor visualización de los puntos cercanos
+3. Gráfica de rendimiento
+Comparación de tiempos entre:
+Fuerza Bruta
+Quadtree
+🚀 Ejecución
+Clona el repositorio:
+git clone https://github.com/tu-usuario/tu-repo.git
+cd tu-repo
+Ejecuta el script:
+python nombre_del_archivo.py
+📊 Resultados esperados
+Para pocos puntos:
+✅ Fuerza Bruta puede ser más rápida (menos overhead)
+Para muchos puntos:
+✅ Quadtree es significativamente más eficiente
+🧪 Análisis de rendimiento
 
-Simplemente ejecuta el archivo:
+El programa evalúa diferentes tamaños de datos:
 
-Lab3.ipynb
-📂 Estructura del Código
-Configuración inicial
+tamaños = [5, 50, 100, 300, 600, 1000, 2000, 5000, 10000]
+
+Para cada tamaño:
+
+Ejecuta múltiples pruebas
+Promedia tiempos
+Determina el método ganador
+📌 Conceptos clave implementados
+Estructuras de datos espaciales
+Subdivisión recursiva
+Poda por intersección
+Búsqueda por rango
+Complejidad algorítmica
+🧾 Estructura del código
+Generación de datos
 Función de distancia
-Método de fuerza bruta
-Visualización
+Implementación de Fuerza Bruta
 Implementación de Quadtree:
-Clase Rectangulo
-Clase Quadtree
-Análisis de rendimiento
-Gráfica final
-🚀 Posibles Mejoras
-Implementar búsqueda de vecino más cercano con Quadtree
-Optimizar la capacidad de los nodos
-Añadir visualización del árbol (subdivisiones)
-Comparar con otras estructuras (KD-Tree, R-Tree)
-📚 Aplicaciones Reales
-Videojuegos (detección de colisiones)
-Sistemas GIS (mapas)
-Simulaciones físicas
-Motores gráficos
+Rectangulo
+Quadtree
+Visualización
+Benchmark de rendimiento
+🎯 Conclusión
+
+El Quadtree demuestra ser una solución mucho más eficiente para grandes volúmenes de datos espaciales, reduciendo significativamente el tiempo de búsqueda al evitar evaluaciones innecesarias.
+
 👨‍💻 Autor
 
-Proyecto académico orientado al análisis de estructuras de datos espaciales.
+Proyecto desarrollado como práctica de estructuras de datos espaciales y análisis de algoritmos.
